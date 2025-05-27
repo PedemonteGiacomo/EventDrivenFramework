@@ -23,6 +23,9 @@ const socketIOMiddleware = () => {
       socket.on('OrderCreated', data => {
         storeAPI.dispatch(eventReceived(data));
       });
+      socket.on('ChatMessage', data => {
+        storeAPI.dispatch(eventReceived(data));
+      });
     }
 
     if (action.type === sendEvent.type && socket) {

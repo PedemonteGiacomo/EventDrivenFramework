@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import BaseLayout from './components/base/BaseLayout';
 import CustomExampleComponent from './components/custom/CustomExampleComponent';
 import { connect } from './state/eventsSlice';
+import ChatComponent from './components/custom/ChatComponent';
 
 function App() {
   const dispatch = useDispatch();
@@ -18,6 +19,8 @@ function App() {
     <BaseLayout header="Applicazione Event-Driven">
       {/* Componente custom principale */}
       <CustomExampleComponent />
+      {/* Altri componenti custom possono essere aggiunti qui */}
+      <ChatComponent />
     </BaseLayout>
   );
 }
