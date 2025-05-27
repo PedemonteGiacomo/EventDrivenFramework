@@ -1,22 +1,29 @@
+// src/components/custom/ChatComponent.js
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendEvent } from '../../state/eventsSlice';
 import BaseCard from '../base/BaseCard';
 import BaseForm from '../base/BaseForm';
 import ChatDisplay from './ChatDisplay';
 
-function ChatComponent() {
+export default function ChatComponent() {
   const dispatch = useDispatch();
-  const events = useSelector(state => state.events.list);
+  const allEvents = useSelector(s => s.events.list);
+  // Prendo solo i messaggi di chat (inviati o ricevuti)
+  const chatEvents = allEvents.filter(e => e.type === 'ChatMessage');
 
   const handleSendMessage = (text) => {
-    dispatch(sendEvent('ChatMessageSent', { text }));
+    dispatch(sendEvent('ChatMessage', { type: 'ChatMessage', payload: { text } }));
   };
 
   return (
     <BaseCard title="Chatbot">
-      <ChatDisplay events={events} />
-      <BaseForm onSubmit={handleSendMessage} placeholder="Scrivi un messaggio..." />
+      <ChatDisplay events={chatEvents} />
+      <BaseForm
+        onSubmit={handleSendMessage}
+        placeholder="Scrivi un messaggio..."
+        buttonText="Invia"
+      />
     </BaseCard>
   );
 }
-export default ChatComponent;

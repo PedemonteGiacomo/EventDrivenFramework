@@ -53,12 +53,12 @@ export default function CustomExampleComponent() {
   const events = useSelector(state => state.events.list);
 
   const handleSend = message => {
-    dispatch(sendEvent('OrderSubmitted', { details: message }));
+    dispatch(sendEvent('OrderSubmitted', { details: message, payload: { text: message } }));
   };
 
   return (
     <BaseCard title={`Messaggi (${events.length})`}>
-      <EventDisplay />
+      <EventDisplay events={events}/>
       <BaseForm onSubmit={handleSend} placeholder="Invia un ordine…" />
     </BaseCard>
   );

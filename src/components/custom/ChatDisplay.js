@@ -1,26 +1,39 @@
-import React from 'react';
+// src/components/custom/ChatDisplay.js
+import React, { useEffect, useRef } from 'react';
 
-function ChatDisplay({ events }) {
-  // Filtra solo gli eventi di chat
-  const chatEvents = events.filter(evt => evt.sender && evt.text);
-  
+export default function ChatDisplay({ events = [] }) { // <-- valore predefinito
+  const bottomRef = useRef(null);
+
+  // Scroll to bottom on new message
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [events.length]);
+
   return (
-    <div className="h-64 overflow-y-auto p-2">
-      {chatEvents.map((evt, idx) => {
-        const isUser = evt.sender === 'user';
-        return (
-          <div key={idx} className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-1`}>
-            <div className={`${isUser ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'} rounded px-3 py-2 max-w-xs`}>
-              {evt.text}
+    <div className="bg-gray-50 rounded-lg p-4 h-64 overflow-y-auto flex flex-col space-y-2">
+      {events.length === 0 ? (
+        <p className="text-gray-500 text-sm">Nessun messaggio ancora.</p>
+      ) : (
+        events.map((evt, idx) => {
+          const isUser = evt.direction === 'sent';
+          return (
+            <div
+              key={idx}
+              className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`
+                  max-w-xs px-3 py-2 rounded-lg 
+                  ${isUser ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-800'}
+                `}
+              >
+                {evt.payload.text || JSON.stringify(evt.payload)}
+              </div>
             </div>
-          </div>
-        );
-      })}
-      {chatEvents.length === 0 && (
-        <p className="text-gray-500 text-sm">Nessun messaggio ancora. Inizia a scrivere!</p>
+          );
+        })
       )}
+      <div ref={bottomRef} />
     </div>
   );
 }
-
-export default ChatDisplay;

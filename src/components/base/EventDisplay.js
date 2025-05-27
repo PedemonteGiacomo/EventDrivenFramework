@@ -1,28 +1,38 @@
-// src/components/base/EventDisplay.jsx
-import React from 'react';
-import { useSelector } from 'react-redux';
+// src/components/custom/ChatDisplay.js
+import React, { useEffect, useRef } from 'react';
 
-/**
- * EventDisplay - Componente per visualizzare la lista degli eventi ricevuti dal backend.
- * Si sottoscrive allo store Redux (slice "events") e mostra gli eventi in ordine di arrivo.
- */
-function EventDisplay() {
-  // Recupera la lista degli eventi dallo store Redux
-  const events = useSelector(state => state.events.list);
+export default function ChatDisplay({ events = [] }) { 
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [events.length]); // correggi qui
 
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded p-2 h-64 overflow-y-auto">
-      {events.map((evt, index) => (
-        <div key={index} className="text-sm text-gray-800 mb-1">
-          {/* Visualizza ogni evento (se è un oggetto, lo converte in stringa JSON) */}
-          {typeof evt === 'string' ? evt : JSON.stringify(evt)}
-        </div>
-      ))}
-      {events.length === 0 && (
-        <p className="text-gray-500 text-sm">Nessun evento ricevuto.</p>
+    <div className="bg-gray-50 rounded-lg p-4 h-64 overflow-y-auto flex flex-col space-y-2">
+      {events.length === 0 ? (
+        <p className="text-gray-500 text-sm">Nessun messaggio ancora.</p>
+      ) : (
+        events.map((evt, idx) => {
+          const isUser = evt.direction === 'sent';
+          return (
+            <div
+              key={idx}
+              className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`
+                  max-w-xs px-3 py-2 rounded-lg 
+                  ${isUser ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-800'}
+                `}
+              >
+                {evt.payload.text || JSON.stringify(evt.payload)}
+              </div>
+            </div>
+          );
+        })
       )}
+      <div ref={bottomRef} />
     </div>
   );
 }
-
-export default EventDisplay;

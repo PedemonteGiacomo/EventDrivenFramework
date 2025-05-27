@@ -1,36 +1,29 @@
-// src/components/base/BaseForm.jsx
+// src/components/base/BaseForm.js
 import React, { useState } from 'react';
+import BaseInput from './BaseInput';
+import BaseButton from './BaseButton';
 
-/**
- * BaseForm - Componente form di base con input di testo e pulsante di invio.
- * Comportamento: gestisce internamente lo stato dell'input e chiama onSubmit(valore)
- * quando il form viene inviato. Dopo l'invio, il campo di input viene resettato.
- */
-function BaseForm({ onSubmit, placeholder = "Scrivi qualcosa..." }) {
-  const [value, setValue] = useState("");
+export default function BaseForm({ onSubmit, placeholder, buttonText = 'Invia' }) {
+  const [value, setValue] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    if (onSubmit && value.trim() !== "") {
-      onSubmit(value);  // Invoca la callback passando il testo inserito
-    }
-    setValue(""); // Reset del campo di input dopo l'invio
+    if (value.trim() === '') return;
+    onSubmit(value);
+    setValue('');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex">
-      <input
-        type="text"
+    <form onSubmit={handleSubmit} className="flex space-x-2">
+      <BaseInput
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={e => setValue(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 border border-gray-300 rounded-l px-3 py-2 focus:outline-none"
+        className="flex-1"
       />
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-r">
-        Invia
-      </button>
+      <BaseButton type="submit" variant="primary">
+        {buttonText}
+      </BaseButton>
     </form>
   );
 }
-
-export default BaseForm;
