@@ -1,18 +1,24 @@
-// src/App.js
-import React from 'react';
-import './App.css';          // puoi tenerlo o semplificarlo
-import OrderForm from './OrderForm';
+// src/App.jsx
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import BaseLayout from './components/base/BaseLayout';
+import CustomExampleComponent from './components/custom/CustomExampleComponent';
+import { connect } from './state/eventsSlice';
 
 function App() {
+  const dispatch = useDispatch();
+
+  // All'avvio dell'app, effettua la connessione al gateway WebSocket
+  useEffect(() => {
+    // URL del gateway WebSocket (esempio per RabbitMQ WebSocket)
+    dispatch(connect({ url: 'http://localhost:4000' }));
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Event-Driven Order Demo</h1>
-      </header>
-      <main style={{ padding: '1rem' }}>
-        <OrderForm />
-      </main>
-    </div>
+    <BaseLayout header="Applicazione Event-Driven">
+      {/* Componente custom principale */}
+      <CustomExampleComponent />
+    </BaseLayout>
   );
 }
 
