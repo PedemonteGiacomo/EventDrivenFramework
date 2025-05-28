@@ -1,34 +1,45 @@
-import { createSlice } from '@reduxjs/toolkit';
+// src/state/eventsSlice.js
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  list: [],
+  list: [],       // ogni item: { eventType: string, payload: any }
   connected: false
-};
+}
 
 const eventsSlice = createSlice({
   name: 'events',
   initialState,
   reducers: {
     connect: (state, action) => {
-      state.connected = false;
+      state.connected = false
     },
     connectionOpened: state => {
-      state.connected = true;
+      state.connected = true
     },
     connectionClosed: state => {
-      state.connected = false;
+      state.connected = false
     },
+    // viene chiamato da middleware su ogni evento in entrata
     eventReceived: (state, action) => {
-      state.list.push(action.payload);
+      const payload = action.payload || {}
+      const { eventType, payload: data } = payload
+      if (typeof eventType === 'string') {
+        state.list.push({ eventType, payload: data })
+      }
     },
+    // azione usata dal UI per inviare eventi generici
     sendEvent: {
-      reducer: (state, action) => {},
+      reducer: (state, action) => {
+        // **opzionale**: se vuoi una "ottimistic push" lato UI,
+        // potresti scommentare la riga successiva:
+        // state.list.push({ eventType: action.payload.eventType, payload: action.payload.payload })
+      },
       prepare: (eventType, payload) => ({
         payload: { eventType, payload }
       })
     }
   }
-});
+})
 
 export const {
   connect,
@@ -36,6 +47,6 @@ export const {
   connectionClosed,
   eventReceived,
   sendEvent
-} = eventsSlice.actions;
+} = eventsSlice.actions
 
-export default eventsSlice.reducer;
+export default eventsSlice.reducer

@@ -1,18 +1,14 @@
-// src/components/base/BaseCard.jsx
 import React from 'react';
 
-/**
- * BaseCard - Componente card di base.
- * Contenitore con bordi arrotondati, ombra e padding standard per un aspetto consistente.
- * Può includere un titolo opzionale e qualsiasi contenuto figlio.
- */
-function BaseCard({ title, children }) {
+export default function BaseCard({ title, children, className = '', noPadding = false }) {
   return (
-    <div className="bg-white rounded shadow p-4 mb-4">
-      {title && <h3 className="text-lg font-bold mb-2">{title}</h3>}
+    <div
+      className={
+        `bg-white rounded-lg shadow ${noPadding ? '' : 'p-4'} mb-4 ${className}`
+      }
+    >
+      {title && <h3 className="text-xl font-semibold mb-2 px-4 pt-4">{title}</h3>}
       <div>{children}</div>
     </div>
   );
 }
-
-export default BaseCard;
