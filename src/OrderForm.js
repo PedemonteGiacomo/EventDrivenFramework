@@ -1,7 +1,7 @@
 // OrderForm.js
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useEventBus } from './useEventBus';
+import { useEventBus } from './hooks/useEventBus';
 
 export default function OrderForm() {
   const [orderDetails, setOrderDetails] = useState('');

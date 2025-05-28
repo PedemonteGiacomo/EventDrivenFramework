@@ -1,9 +1,8 @@
 // src/components/custom/ChatViewer.js
 import React from 'react'
-import BaseCard   from '../base/BaseCard'
-import BaseForm   from '../base/BaseForm'
+import BaseCard from '../base/BaseCard'
+import BaseFormWithEvent from '../base/BaseFormWithEvent'
 import ChatDisplay from './ChatDisplay'
-import { useEventBus } from '../../useEventBus'
 import { useSelector } from 'react-redux'
 import { selectUniqueChatEvents, selectChatEvents } from '../../state/selectors'
 
@@ -16,17 +15,14 @@ export default function ChatViewer({
   buttonText,
   sendEventType,
   displayEventType,
-  layoutClass,        // puoi definire proprietà addizionali nello schema
+  layoutClass,
 }) {
-  const { sendEvent } = useEventBus()
-
   // 1) Scegli quale selector usare in base a displayEventType
   const events = useSelector(state => {
     switch (displayEventType) {
-      case 'ChatMessage':      return selectUniqueChatEvents(state)
-      case 'ChatMessageSent':  return selectChatEvents(state)
-      // puoi estendere con altri tipi...
-      default:                 return []
+      case 'ChatMessage': return selectUniqueChatEvents(state)
+      case 'ChatMessageSent': return selectChatEvents(state)
+      default: return []
     }
   })
 
@@ -40,10 +36,11 @@ export default function ChatViewer({
           <ChatDisplay events={events} />
         </div>
         <div className="p-3 border-t border-gray-200">
-          <BaseForm
+          <BaseFormWithEvent
             placeholder={inputPlaceholder}
             buttonText={buttonText}
-            onSubmit={text => sendEvent(sendEventType, { sender: 'user', text })}
+            eventType={sendEventType}
+            buildPayload={(text) => ({ sender: 'user', text })}
           />
         </div>
       </div>
