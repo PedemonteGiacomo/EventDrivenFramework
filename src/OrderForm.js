@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useEventBus } from './hooks/useEventBus';
+import { EVENT_TYPES } from './state/eventTypes';
 
 export default function OrderForm() {
   const [orderDetails, setOrderDetails] = useState('');
@@ -12,7 +13,7 @@ export default function OrderForm() {
     e.preventDefault();
     if (orderDetails.trim() === '') return;
     // Invia evento OrderSubmitted al backend con i dettagli inseriti
-    sendEvent('OrderSubmitted', { details: orderDetails });
+    sendEvent(EVENT_TYPES.ORDER_SUBMITTED, { details: orderDetails });
     console.log('Inviato evento OrderSubmitted con payload:', orderDetails);
     setOrderDetails('');  // reset del campo input
   };

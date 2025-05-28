@@ -4,13 +4,15 @@ import BaseCard from '../base/BaseCard';
 import BaseForm from '../base/BaseForm';
 import EventDisplay from '../base/EventDisplay';
 import { sendEvent } from '../../state/eventsSlice';
+import { EVENT_TYPES } from '../../state/eventTypes';
+
 
 export default function CustomExampleComponent() {
   const dispatch = useDispatch();
   const events = useSelector(s => s.events.list);
 
   const handleSend = message => {
-    dispatch(sendEvent('OrderSubmitted', { details: message }));
+    dispatch(sendEvent(EVENT_TYPES.ORDER_SUBMITTED, { details: message }));
   };
 
   return (

@@ -1,16 +1,66 @@
 {
   "$id": "ChatViewerConfig",
   "type": "object",
+  "title": "ChatViewer Configuration",
+  "description": "Schema per configurare il componente ChatViewer",
+
   "properties": {
-    "type":             { "const": "ChatViewer" },
-    "header":           { "type": "string", "default": "Chat in Tempo Reale" },
-    "layoutHeader":     { "type": "string", "default": "Event-Driven application" },
-    "inputPlaceholder": { "type": "string", "default": "Scrivi un messaggio..." },
-    "buttonText":       { "type": "string", "default": "Invia" },
-    "sendEventType":    { "type": "string", "default": "ChatMessageSent" },
-    "displayEventType": { "type": "string", "default": "ChatMessage" },
-    "layoutClass":      { "type": "string", "default": "max-w-md mx-auto shadow-xl" }
+    "type": {
+      "const": "ChatViewer",
+      "description": "Tipo di componente: deve essere ChatViewer"
+    },
+
+    "header": {
+      "type": "string",
+      "default": "Chat in Tempo Reale",
+      "description": "Titolo mostrato in alto nel componente"
+    },
+
+    "layoutHeader": {
+      "type": "string",
+      "default": "Event-Driven application",
+      "description": "Testo dell'header superiore"
+    },
+
+    "inputPlaceholder": {
+      "type": "string",
+      "default": "Scrivi un messaggio...",
+      "description": "Placeholder del campo input"
+    },
+
+    "buttonText": {
+      "type": "string",
+      "default": "Invia",
+      "description": "Testo del pulsante di invio"
+    },
+
+    "sendEventType": {
+      "type": "string",
+      "enum": ["ChatMessageSent", "ChatMessage", "OrderSubmitted", "OrderCreated"],
+      "default": "ChatMessageSent",
+      "description": "Tipo di evento inviato quando si preme il pulsante"
+    },
+
+    "displayEventType": {
+      "type": "string",
+      "enum": ["ChatMessage", "ChatMessageSent", "OrderSubmitted", "OrderCreated"],
+      "default": "ChatMessage",
+      "description": "Tipo di evento mostrato nel viewer"
+    },
+
+    "layoutClass": {
+      "type": "string",
+      "default": "max-w-md mx-auto shadow-xl",
+      "description": "Classi Tailwind CSS per la disposizione del layout"
+    },
+
+    "deduplicate": {
+      "type": "boolean",
+      "default": true,
+      "description": "Evita la visualizzazione di eventi duplicati"
+    }
   },
+
   "required": ["type"],
   "additionalProperties": false
 }
