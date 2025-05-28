@@ -1,0 +1,16 @@
+{
+  "$id": "ChatViewerConfig",
+  "type": "object",
+  "properties": {
+    "type":             { "const": "ChatViewer" },
+    "header":           { "type": "string", "default": "Chat in Tempo Reale" },
+    "layoutHeader":     { "type": "string", "default": "Event-Driven application" },
+    "inputPlaceholder": { "type": "string", "default": "Scrivi un messaggio..." },
+    "buttonText":       { "type": "string", "default": "Invia" },
+    "sendEventType":    { "type": "string", "default": "ChatMessageSent" },
+    "displayEventType": { "type": "string", "default": "ChatMessage" },
+    "layoutClass":      { "type": "string", "default": "max-w-md mx-auto shadow-xl" }
+  },
+  "required": ["type"],
+  "additionalProperties": false
+}
