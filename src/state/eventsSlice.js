@@ -1,52 +1,69 @@
 // src/state/eventsSlice.js
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  list: [],       // ogni item: { eventType: string, payload: any }
+  eventsByType: {},  // es: { ChatMessage: [...], OrderSubmitted: [...] }
   connected: false
-}
+};
 
 const eventsSlice = createSlice({
   name: 'events',
   initialState,
   reducers: {
     connect: (state, action) => {
-      state.connected = false
+      state.connected = false;
     },
     connectionOpened: state => {
-      state.connected = true
+      state.connected = true;
     },
     connectionClosed: state => {
-      state.connected = false
+      state.connected = false;
     },
-    // viene chiamato da middleware su ogni evento in entrata
+
+    // Evento ricevuto dal middleware socket (eventType, payload)
     eventReceived: (state, action) => {
-      const payload = action.payload || {}
-      const { eventType, payload: data } = payload
-      if (typeof eventType === 'string') {
-        state.list.push({ eventType, payload: data })
+      const { eventType, payload } = action.payload || {};
+      if (!eventType) return;
+
+      if (!state.eventsByType[eventType]) {
+        state.eventsByType[eventType] = [];
       }
+
+      state.eventsByType[eventType].push(payload);
     },
-    // azione usata dal UI per inviare eventi generici
+
+    // Azione dispatchata dall'interfaccia per mandare eventi
     sendEvent: {
       reducer: (state, action) => {
-        // **opzionale**: se vuoi una "ottimistic push" lato UI,
-        // potresti scommentare la riga successiva:
-        // state.list.push({ eventType: action.payload.eventType, payload: action.payload.payload })
+        // opzionale: optimistic update (push in arrivo qui)
+        // const { eventType, payload } = action.payload;
+        // if (!state.eventsByType[eventType]) {
+        //   state.eventsByType[eventType] = [];
+        // }
+        // state.eventsByType[eventType].push(payload);
       },
       prepare: (eventType, payload) => ({
         payload: { eventType, payload }
       })
+    },
+
+    // Pulizia eventi per tipo (utile per debug/reset o history limit)
+    clearEventsByType: (state, action) => {
+      const eventType = action.payload;
+      if (eventType && state.eventsByType[eventType]) {
+        state.eventsByType[eventType] = [];
+      }
     }
   }
-})
+});
 
 export const {
   connect,
   connectionOpened,
   connectionClosed,
   eventReceived,
-  sendEvent
-} = eventsSlice.actions
+  sendEvent,
+  clearEventsByType
+} = eventsSlice.actions;
 
-export default eventsSlice.reducer
+export default eventsSlice.reducer;

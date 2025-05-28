@@ -4,9 +4,12 @@ import BaseCard from '../base/BaseCard'
 import BaseFormWithEvent from '../base/BaseFormWithEvent'
 import ChatDisplay from './ChatDisplay'
 import { useSelector } from 'react-redux'
-import { selectUniqueChatEvents, selectChatEvents } from '../../state/selectors'
+import {
+  selectEventsByType,
+  selectUniqueEventsByType
+} from '../../state/selectors'
 
-// Il nome che useremo nello schema: schema.type === 'ChatViewer'
+// schema.type === 'ChatViewer'
 export const schemaType = 'ChatViewer'
 
 export default function ChatViewer({
@@ -16,15 +19,14 @@ export default function ChatViewer({
   sendEventType,
   displayEventType,
   layoutClass,
+  deduplicate = true // default: deduplica
 }) {
-  // 1) Scegli quale selector usare in base a displayEventType
-  const events = useSelector(state => {
-    switch (displayEventType) {
-      case 'ChatMessage': return selectUniqueChatEvents(state)
-      case 'ChatMessageSent': return selectChatEvents(state)
-      default: return []
-    }
-  })
+  // Se deduplicate è true, usa il selector che rimuove duplicati
+  const events = useSelector(state =>
+    deduplicate
+      ? selectUniqueEventsByType(state, displayEventType)
+      : selectEventsByType(state, displayEventType)
+  )
 
   return (
     <BaseCard noPadding className={layoutClass || 'max-w-md mx-auto shadow-xl'}>

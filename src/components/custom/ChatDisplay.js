@@ -18,7 +18,7 @@ export default function ChatDisplay({ events }) {
         bg-green-50
       "
       renderItem={(evt, idx) => {
-        const isUser = evt.payload.sender === 'user'
+        const isUser = evt.sender === 'user'
         return (
           <div
             key={idx}
@@ -38,7 +38,7 @@ export default function ChatDisplay({ events }) {
                 }
               `}
             >
-              {evt.payload.text}
+              {evt.text}
               {/* la “pinna” */}
               <span
                 className={`
