@@ -1,38 +1,17 @@
-// src/components/custom/ChatDisplay.js
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
-export default function ChatDisplay({ events = [] }) { 
-  const bottomRef = useRef(null);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [events.length]); // correggi qui
-
+export default function EventDisplay({ events }) {
   return (
-    <div className="bg-gray-50 rounded-lg p-4 h-64 overflow-y-auto flex flex-col space-y-2">
+    <div className="bg-gray-100 rounded-md p-4 h-60 overflow-auto shadow-inner">
       {events.length === 0 ? (
-        <p className="text-gray-500 text-sm">Nessun messaggio ancora.</p>
+        <p className="text-gray-500">Nessun evento ricevuto.</p>
       ) : (
-        events.map((evt, idx) => {
-          const isUser = evt.direction === 'sent';
-          return (
-            <div
-              key={idx}
-              className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className={`
-                  max-w-xs px-3 py-2 rounded-lg 
-                  ${isUser ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-800'}
-                `}
-              >
-                {evt.payload.text || JSON.stringify(evt.payload)}
-              </div>
-            </div>
-          );
-        })
+        events.map((evt, idx) => (
+          <div key={idx} className="mb-2 text-sm">
+            {JSON.stringify(evt)}
+          </div>
+        ))
       )}
-      <div ref={bottomRef} />
     </div>
   );
 }
