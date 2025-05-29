@@ -1,17 +1,16 @@
 // src/state/selectors.js
 
-// Tutti gli eventi di un tipo specifico
+// Prende tutti gli eventi di un tipo
 export const selectEventsByType = (state, type) =>
   state.events.eventsByType[type] || [];
 
-// Se vuoi ancora quelli unici
+// Deduplica **solo** le ripetizioni **consecutive**
 export const selectUniqueEventsByType = (state, type) => {
-  const seen = new Set();
   const list = selectEventsByType(state, type);
-  return list.filter(evt => {
-    const key = JSON.stringify(evt);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
+  return list.filter((evt, idx) => {
+    if (idx === 0) return true;
+    const prev = list[idx - 1];
+    // confronta payload grezzo
+    return JSON.stringify(evt) !== JSON.stringify(prev);
   });
 };

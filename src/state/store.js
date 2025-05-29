@@ -13,8 +13,13 @@ const socketIOMiddleware = () => {
   let socket = null
 
   return storeAPI => next => action => {
-    // 1) all'avvio della connect action, apriamo il WS
+    // --- 1) APRI IL SOCKET SOLO SE NON ESISTE GIÀ ---
     if (action.type === connect.type) {
+      // se esiste già, non ristabiliamo un secondo socket
+      if (socket) {
+        return next(action)
+      }
+
       socket = io(action.payload.url)
 
       socket.on('connect', () => {
@@ -24,13 +29,12 @@ const socketIOMiddleware = () => {
         storeAPI.dispatch(connectionClosed())
       })
 
-      // ascolta *qualsiasi* evento in ingresso
       socket.onAny((eventType, data) => {
         storeAPI.dispatch(eventReceived({ eventType, payload: data }))
       })
     }
 
-    // 2) quando UI fa dispatch(sendEvent), inoltriamo al bus
+    // 2) inoltra sendEvent SOLO SULLO STESSO socket
     if (action.type === sendEvent.type && socket && socket.connected) {
       const { eventType, payload } = action.payload
       socket.emit(eventType, payload)

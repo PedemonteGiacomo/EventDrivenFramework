@@ -56,7 +56,7 @@
 
     "deduplicate": {
       "type": "boolean",
-      "default": true,
+      "default": false,
       "description": "Evita la visualizzazione di eventi duplicati"
     }
   },
